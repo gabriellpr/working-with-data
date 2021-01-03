@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+  integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+  crossorigin=""></script>
+  <style>
+    #issMap{
+      height: 180px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Where is the ISS?</h1>
+
+  <p>
+    Latitude: <span id="lat"></span>
+    <br />
+    Longitude: <span id="long"></span>
+  </p>
+
+  <div id="issMap"></div>
+
+  <script>
+    //Making map and tiles
+    const map = L.map('issMap').setView([0, 0], 1);
+    //using openStreetMap
+    const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+    const tileURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const tiles = L.tileLayer(tileURL, { attribution });
+    tiles.addTo(map);
+
+    //making a marker custom icon
+    const issIcon = L.icon({
+      iconUrl: 'iss200.png',
+      iconSize: [50, 32],
+      iconAnchor: [25, 16]
+    })
+
+    const marker = L.marker([0, 0], { icon: issIcon }).addTo(map);
+
+    
+
+
+    const api_url = 'https://api.wheretheiss.at/v1/satellites/25544';
+    async function getISS(){
+      const response = await fetch(api_url);
+      const data = await response.json();
+      const { longitude, latitude } = data;
+
+      //L.marker([latitude, longitude]).addTo(map);
+      marker.setLatLng([latitude, longitude]);
+
+      document.getElementById('lat').textContent = latitude;
+      document.getElementById('long').textContent = longitude;
+
+      console.log(longitude);
+      console.log(latitude);
+    }
+    getISS();
+  </script>
+</body>
+</html>

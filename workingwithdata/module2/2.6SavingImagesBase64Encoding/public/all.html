@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"
+      integrity="sha512-hAm8hj9/2EIonvS+sf0G3anaY8zYHv6q7ktNlLTg8wLwFvhUavnDdH0gif8SA3U1kN0lyKBWbf1wD4+5BfaMMA=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"
+      integrity="sha512-P/Je1zlTfRugG4aRZRx9hYRVph2CkbpchkgP6ub1gNF/VNHDUNq0/WOY0CSLMmwEXxrQ7HohFmMenWGpx8ZzvQ=="
+      crossorigin="anonymous"
+    ></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>DAta Selfie app</h1>
+
+    <script>
+      getData();
+      async function getData() {
+        const response = await fetch("/api");
+        const data = await response.json();
+        console.log(data);
+
+        for (item of data) {
+          const root = document.createElement("div");
+          const mood = document.createElement("div");
+          const geo = document.createElement("div");
+          const date = document.createElement("div");
+
+          mood.textContent = `mood: ${item.vegetable}`;
+          geo.textContent = `${item.lat}, ${item.lon}`;
+
+          const dateString = new Date(item.timestamp).toLocaleDateString();
+          date.textContent = dateString;
+          root.append(mood, geo, date);
+          document.body.append(root);
+        }
+      }
+    </script>
+  </body>
+</html>
